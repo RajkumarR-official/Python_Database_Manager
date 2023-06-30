@@ -2,23 +2,15 @@
 import mysql.connector as dbcon
 # install tabulate in terminal < pip install mysql-connector-python > and impoting it
 from tabulate import tabulate
-
 print("Connecting to DB......")
-
 con =dbcon.connect(host ="localhost",user="root",password="mysql",database="python")
-
 print ("connected to DB successfully")
-
 print("creating cursor")
-
 cur = con.cursor()
-
-
 class DB:
     def __init__(self) -> None:
         self.curbatabase="python"
         self.curtablename="student"
-    
     # create a database and use this database for performing further sql queries
     def createdatabase(self,databasename,tablename,columnname_datatype):
         sql=f"create database {databasename};"
@@ -32,7 +24,6 @@ class DB:
         self.curbatabase=databasename
         self.curtablename = tablename
         print("created a batabase and currently using this database")
-
     # method to create a table which get arguments like tablename and columnname with datatype, constraints too as string
     def createtable(self,tablename,columnname_datatype):
         sql=f"create table if not exists {tablename}({columnname_datatype}); "
@@ -40,8 +31,7 @@ class DB:
         con.commit()
         self.curtablename=tablename
         print("table created with colunm and datatype successfully")
-    def insert(self,tablename=None,):
-            # 
+    def insert(self,tablename=None,):  
         if tablename!=None:
             sql=f"show columns from {tablename};"
             cur.execute(sql) 
@@ -53,7 +43,6 @@ class DB:
             con.commit()
             self.curtablename=tablename
             print("value inserted successfully")
-
         else:
             sql=f"show columns from {self.curtablename};"
             cur.execute(sql)
@@ -65,7 +54,6 @@ class DB:
             cur.execute(sql)
             con.commit()
             print("value inserted successfully")
-
     # method to read the table record from currently working with or can give value
     def read(self,tablename=None,database=None):
         if tablename is not None and database is not None:
@@ -86,16 +74,13 @@ class DB:
             cur.execute(sql)
             rows = cur.fetchall()
             con.commit()
-
         else:
             True    
-        
         # Get column names from the cursor description
         headers = [column[0] for column in cur.description]
         # Print the table using tabulate
         table = tabulate(rows, headers, tablefmt="grid")
         print(table)
-
     # update method to update values in the table 
     def update(self,tablename=None, databasename=None):
         if databasename is None and tablename is not None:
@@ -105,7 +90,6 @@ class DB:
             cur.execute(sql)
             print("table updated successfully ")
             con.commit()
-
         if tablename is not None and databasename is not None:
             cname = str(input("enter the column name and value you want to update like, colunmname = value :  "))
             rname = str(input("enter the condition,to filter records like, colunmname = value :  "))
@@ -115,7 +99,6 @@ class DB:
             cur.execute(sql1)
             print("table updated successfully ")
             con.commit()
-
         if databasename is None and tablename is  None:
             cname = str(input("enter the column name and value you want to update like, colun_mname = value :  "))
             rname = str(input("enter the condition,to filter records like, colunmname = value :  "))
@@ -133,7 +116,6 @@ class DB:
             cur.execute(sql)
             print("record deleted successfully from the table")
             con.commit()
-        
         if tablename is not None and databasename is not None:
             cname=str(input("Enter the condition to filter records and delete, like column_name =value."))
             sql=f"use {databasename}"
@@ -142,14 +124,12 @@ class DB:
             cur.execute(sql)
             print("record deleted successfully from the table")
             con.commit()
-
         if tablename is  None and databasename is  None:
             cname=str(input("Enter the condition to filter records and delete, like column_name =value."))
             sql=f"delete from {self.curtablename} where {cname};"
             cur.execute(sql)
             print("record deleted successfully from the table")
             con.commit()
-        
     def customized(self):
         sql =str("Enter a sql query to execute ; ")
         cur.execute(sql)
@@ -178,7 +158,6 @@ class DB:
             # Print the table using tabulate
             table = tabulate(rows, headers, tablefmt="grid")
             print(table)
-
     def showdatabases(self):
         sql1 ="show databases;"
         cur.execute(sql1)
@@ -187,12 +166,9 @@ class DB:
         # Print the table using tabulate
         table = tabulate(rows, headers, tablefmt="grid")
         print(table)
-
-
     # options to perform 
     def options(self):
         print('''\n   Choose and enter an option from the list:\n      0 TO EXIT \n      1 TO CREATE A DATABASE AND TABLE  \n      2 TO CREATE A TABLE \n      3 TO INSERT A VALUE TO TABLE \n      4 TO UPDATE  RECORD\n      5 TO READ TABLE \n      6 TO DELETE RECORD FROM TABLE ''')
-
 obj = DB()
 try:
     while True:
@@ -218,14 +194,12 @@ try:
                     obj.read()
                     obj.insert()
                     True
-
                 if sn==2:
                     obj.showtables()
                     tname =str(input("enter a existing table name in this database : "))
                     obj.read(tname)
                     obj.insert(tname)
                     True
-
                 if sn==3:
                     obj.showdatabases()
                     dname =str(input("enter a existing database name : "))
@@ -236,13 +210,10 @@ try:
                 else:
                     True
             if n== 5:
-
                 sn= int(input(f'''       choose any one option\n      1 if you want to use active database and its table \n      2 if you want to use different table in the current active database \n      3 if you want to use different database and table that already exist \n      0 to go main options  :  '''))
-                
                 if sn==1:
                     obj.read()
                     True
-                
                 if sn==2:
                     obj.showtables()
                     tname =str(input("enter a table name  "))
@@ -300,14 +271,11 @@ try:
                     obj.delete(tname)        
                 else:
                     True     
-            
             else:
                 True
         else:
             True
-
 except Exception as e:
     print("ERROR:  ",e)
-
 con.close()
 print("bd closed successfully")
